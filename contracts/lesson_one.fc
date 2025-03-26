@@ -1,0 +1,55 @@
+#include "imports/stdlib.fc";
+
+() recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+    builder b = begin_cell();
+    cell c = b.end_cell();
+    slice s = begin_cell().end_cell().begin_parse();
+    int num = 10;
+    turple t = empty_tuple();
+    list l = cons(1,num);
+    slice str = "laskalks"h;
+    slice str = "laskalks"H;
+    cont cnt = s.bless();
+    null();
+
+    ;; HashMap -> keys: int, uint, slice  values: builder, cell, slice, dict
+
+    cell dict = new dict();
+    dict~udict_set(32, 1, begin_cell().store_uint(5, 32).end_cell());
+
+    throw_if(111, dict.dict_empty?());
+    throw_unless(112, dict.dict_empty?() == 0);
+
+    cell data_in_cell = begin_cell().store_uint(num, 32).store_ref(c).end_cell();
+    slice cell_slice = data_in_cell~begin_parse();
+    int num_from_cell = cell_slice.load_uint();
+    cell ref_cell_from_cell = cell_slice.load_ref();
+}
+
+(int, int) sum_and_mul(int a, int b) {
+    return (a + b, a * b);
+}
+
+() fill_builder(builder b) {
+    b.store_uint(1, 32);
+}
+
+;; impure  -  for func which modify contract state
+;; method_id  -  for get func which called from offchain services
+;; inline  -  use in order to dont use asm "DOWDJJUMP" command econom gas 
+;; inline ref  -  ...
+
+() base_function() impure inline {
+
+}
+
+int increment(int x) {
+    return x + 1;
+}
+
+int do_increment(int x) {
+    x~increment(); ;; modifiable func incr x
+    int res = x.increment();  ;; not modifiable func dont change x return neq num
+    int res = increment(x);  ;; not modifiable func dont change x return neq num
+}
+
