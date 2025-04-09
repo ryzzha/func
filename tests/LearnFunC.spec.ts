@@ -18,7 +18,8 @@ describe('LearnFunC', () => {
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        learnFunC = blockchain.openContract(LearnFunC.createFromConfig({}, code));
+        learnFunC = blockchain.openContract(LearnFunC.createFromConfig({ total: 0, operations_count: 0 }, code));
+
 
         deployer = await blockchain.treasury('deployer');
 
@@ -32,8 +33,20 @@ describe('LearnFunC', () => {
         });
     });
 
-    it('should deploy', async () => {
-        // the check is done inside beforeEach
-        // blockchain and learnFunC are ready to use
+    it('should increment number and operation amount', async () => {
+        const totalBefore = await learnFunC.getTotal();
+
+        const incrementResult = await learnFunC.sendIncrement(deployer.getSender(), 10, "increment");
+
+        const totalAfter = await learnFunC.getTotal();
+
+        expect(incrementResult.transactions).toHaveTransaction({
+            from: deployer.address,
+            to: learnFunC.address,
+            success: true,
+        });
+
+        console.log("totalBefore -> " + totalBefore);
+        console.log("totalAfter -> " + totalAfter);
     });
 });

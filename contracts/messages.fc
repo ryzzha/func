@@ -1,0 +1,91 @@
+#include "imports/stdlib.fc";
+
+() recv_internal(int msg_value, cell in_msg_full, slice in_msg_body) impure {
+    if(in_msg_body.slice_empty?()) {
+        return ();
+    } 
+
+    slice cs = in_msg_full.begin_parse();
+    int flags = cs~load_uint(4);
+
+    if(flags & 1) {
+        return ();
+    }
+
+    slice sender_address = cs~load_msg_addr();
+
+    int op = in_msg_body~load_uint(32);
+    int query_id = in_msg_body~load_uint(64);
+
+    if(op == 1) {
+        ;;
+        return ();
+    }
+
+    throw(0xffff);
+}
+
+;; Messages 
+
+;; internal 0b0110 0x18 bounceable  |  0b0100 0x10 non-bounceable
+;; external
+;; logs
+
+;; common structure  
+
+;; TLB shreme 
+
+;; message$_ {X:Type} info:CommonMsgInfoRelaxed
+;;   init:(Maybe (Either StateInit ^StateInit))
+;;   body:(Either X ^X) = MessageRelaxed X;
+
+;;   cell msg = begin_cell()
+;;     .store_uint(0x18, 6)
+;;     .store_slice(addr)
+;;     .store_coins(amount)
+;;     .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+;;     .store_slice(message_body)
+;;   .end_cell();
+
+;; detailed structure  
+
+;;   var msg = begin_cell()
+;;     .store_uint(0, 1) ;; tag
+;;     .store_uint(1, 1) ;; ihr_disabled
+;;     .store_uint(1, 1) ;; allow bounces
+;;     .store_uint(0, 1) ;; not bounced itself
+;;     .store_slice(source)
+;;     .store_slice(destination)
+;;     ;; serialize CurrencyCollection (see below)
+;;     .store_coins(amount)
+;;     .store_dict(extra_currencies)
+;;     .store_coins(0) ;; ihr_fee
+;;     .store_coins(fwd_value) ;; fwd_fee
+;;     .store_uint(cur_lt(), 64) ;; lt of transaction
+;;     .store_uint(now(), 32) ;; unixtime of transaction
+;;     .store_uint(0,  1) ;; no init-field flag (Maybe)
+;;     .store_uint(0,  1) ;; inplace message body flag (Either)
+;;     .store_slice(msg_body)
+;;   .end_cell();
+
+;; which cases we use msg bekow and why msg bode store as uint ???
+
+;; () send_message_back(addr, ans_tag, query_id, body, grams, mode) impure inline_ref {
+;;   ;; int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool src:MsgAddress -> 011000
+;;   var msg = begin_cell()
+;;     .store_uint(0x18, 6)
+;;     .store_slice(addr)
+;;     .store_coins(grams)
+;;     .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
+;;     .store_uint(ans_tag, 32)
+;;     .store_uint(query_id, 64);
+;;   if (body >= 0) {
+;;     msg~store_uint(body, 32);
+;;   }
+;;   send_raw_message(msg.end_cell(), mode);
+;; }
+
+;; external
+
+;; send_raw_message(msg.end_cell(), mode + flag)
+
