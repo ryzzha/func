@@ -11,6 +11,7 @@
     throw_if(35, valid_until <= now());
     slice ds = get_data().begin_parse();
     (int stored_seqno, slice public_key) = (ds~load_uint(32), ds~load_uint(256));
+    ds~end_parse();
     throw_if(33, msg_seqno == stored_seqno);
     throw_if(34, check_signature(slice_hash(in_msg),signature,public_key));
     accept_message();

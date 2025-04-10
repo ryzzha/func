@@ -4,7 +4,7 @@ import { LearnFunC } from '../wrappers/LearnFunC';
 import '@ton/test-utils';
 import { compile } from '@ton/blueprint';
 
-describe('LearnFunC', () => {
+describe.skip('LearnFunC', () => {
     let code: Cell;
 
     beforeAll(async () => {

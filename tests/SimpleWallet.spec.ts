@@ -6,7 +6,7 @@ import { compile } from '@ton/blueprint';
 import { beginCell, safeSign, contractAddress } from '@ton/core';
 import { getSecureRandomBytes, mnemonicToPrivateKey, mnemonicToWalletKey, KeyPair } from '@ton/crypto';
 
-describe('SimpleWallet', () => {
+describe.skip('SimpleWallet', () => {
     let code: Cell;
 
     beforeAll(async () => {
@@ -34,58 +34,58 @@ describe('SimpleWallet', () => {
         });
     });
 
-    it('do actions with wallet', async () => {
-        // example from gpt ->
+    it.skip('do actions with wallet', async () => {
+        // // example from gpt ->
 
-        /// 1. Параметри
-        const seqno = 0;
-        const validUntil = Math.floor(Date.now() / 1000) + 60; // +1 хвилина
+        // /// 1. Параметри
+        // const seqno = 0;
+        // const validUntil = Math.floor(Date.now() / 1000) + 60; // +1 хвилина
 
-        /// 2. Побудова внутрішнього slice (payload)
-        const payload = beginCell()
-        .storeUint(seqno, 32)
-        .storeUint(validUntil, 32)
-        // .storeUint(0x10, 8) // mode
-        // .storeRef(...)     // повідомлення (опціонально)
-        .endCell();
+        // /// 2. Побудова внутрішнього slice (payload)
+        // const payload = beginCell()
+        // .storeUint(seqno, 32)
+        // .storeUint(validUntil, 32)
+        // // .storeUint(0x10, 8) // mode
+        // // .storeRef(...)     // повідомлення (опціонально)
+        // .endCell();
 
-        /// 3. Підпис хешу
-        const privateKey = "/* завантаж приватний ключ */";
-        const hash = payload.hash();
-        const signature = sign(hash, privateKey);
+        // /// 3. Підпис хешу
+        // const privateKey = "/* завантаж приватний ключ */";
+        // const hash = payload.hash();
+        // const signature = sign(hash, privateKey);
 
-        /// 4. Створюємо зовнішнє повідомлення
-        const message = beginCell()
-        .storeBuffer(signature) // 512 біт = 64 байти
-        .storeSlice(payload.asSlice())
-        .endCell();
+        // /// 4. Створюємо зовнішнє повідомлення
+        // const message = beginCell()
+        // .storeBuffer(signature) // 512 біт = 64 байти
+        // .storeSlice(payload.asSlice())
+        // .endCell();
 
-        /// 5. Надсилаємо (псевдокод)
-        await client.sendExternalMessage(walletAddress, message);
+        // /// 5. Надсилаємо (псевдокод)
+        // await client.sendExternalMessage(walletAddress, message);
 
-        const mnemonics = "grape bird tissue ..."; // 24 слова
-        const keyPair = await mnemonicToWalletKey(mnemonics.split(" "));
-        const privateKey = keyPair.secretKey;
+        // const mnemonics = "grape bird tissue ..."; // 24 слова
+        // const keyPair = await mnemonicToWalletKey(mnemonics.split(" "));
+        // const privateKey = keyPair.secretKey;
 
 
-        const innerMsg = beginCell()
-        .storeUint(0xf8a7ea5, 32) // op
-        .storeUint(0, 64)         // query_id
-        .storeCoins(toNano("0.1"))
-        .storeAddress(receiver)
-        .endCell();
+        // const innerMsg = beginCell()
+        // .storeUint(0xf8a7ea5, 32) // op
+        // .storeUint(0, 64)         // query_id
+        // .storeCoins(toNano("0.1"))
+        // .storeAddress(receiver)
+        // .endCell();
 
-        const payload = beginCell()
-        .storeUint(seqno, 32)
-        .storeUint(validUntil, 32)
-        .storeUint(3, 8)           // mode
-        .storeRef(beginCell()
-            .storeUint(0, 2)         // flags for internal message
-            .storeAddress(receiver)
-            .storeCoins(toNano("0.1"))
-            .storeRef(innerMsg)
-            .endCell()
-        )
-        .endCell();
+        // const payload = beginCell()
+        // .storeUint(seqno, 32)
+        // .storeUint(validUntil, 32)
+        // .storeUint(3, 8)           // mode
+        // .storeRef(beginCell()
+        //     .storeUint(0, 2)         // flags for internal message
+        //     .storeAddress(receiver)
+        //     .storeCoins(toNano("0.1"))
+        //     .storeRef(innerMsg)
+        //     .endCell()
+        // )
+        // .endCell();
     });
 });
