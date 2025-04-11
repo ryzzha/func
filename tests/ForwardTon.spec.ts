@@ -43,6 +43,15 @@ describe.skip('ForwardTon', () => {
         const userBalanceBefore = await user.getBalance();
         const receiverBalanceBefore = await receiver.getBalance();
 
+        await blockchain.setVerbosityForAddress(forwardTon.address, {
+           print: true,
+           blockchainLogs: false,
+           vmLogs: "vm_logs_full",
+           debugLogs: false 
+        })
+
+        // for debug write vat~dump() in sm
+
         const resultMsg = await forwardTon.sendFunds(user.getSender(), toNano("1"));
 
         expect(resultMsg.transactions).toHaveTransaction({
